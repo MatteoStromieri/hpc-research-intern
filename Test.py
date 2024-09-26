@@ -1,7 +1,8 @@
 import unittest
-import matplotlib.pyplot as plt
 import networkx as nx
 from Preprocessing import getComputeNodes, findAllPaths, cliqueBuilder, SWITCH, COMPUTE_NODE
+from Threshold import computeThreshold, computeBalancedGraph, computeOptimalScheduleBalancedClique
+import helpers
 
 class TestPreprocessing(unittest.TestCase):
     
@@ -17,19 +18,35 @@ class TestPreprocessing(unittest.TestCase):
     def testGetFindAllPaths(self):
         G = nx.MultiGraph()  # Corrected capitalization of Graph
         G.add_edges_from([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})])
-        self.assertEqual(findAllPaths(G,{1,4}), [
+        self.assertEqual(findAllPaths(G,1,4), [
             ([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})], {'alpha':0.3,'beta':0.1}),
             ([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})], {'alpha':0.3,'beta':0.1})
             ])
-    
+
     def testCliqueBuilder(self):
         G = nx.MultiGraph()  # Corrected capitalization of Graph
-        G.add_edges_from([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})])        
+        G.add_edges_from([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.5, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})])        
         nx.set_node_attributes(G, {1:COMPUTE_NODE, 2:COMPUTE_NODE, 3:SWITCH, 4:COMPUTE_NODE}, "node_type")
-        G_clique = cliqueBuilder(G)
-        nx.draw(G_clique)
-        self.assertTrue(True)
+        _, edges = cliqueBuilder(G)
+        self.assertDictEqual(edges, helpers.test_edges)
 
+    def testComputeBalancedGraph(self):
+        G_clique = nx.MultiGraph()
+        G_clique.add_edges_from([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.5, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})])
+        G_balanced, _, _ = computeBalancedGraph(G_clique)
+        G_test = nx.MultiGraph()
+        G_test.add_edges_from([(1,2,{'alpha':0.2, 'beta':0.1}),(1,3,{'alpha':0.2, 'beta':0.1}),(1,4,{'alpha':0.2, 'beta':0.1}), (2,3,{'alpha':0.2, 'beta':0.1}), (2,4,{'alpha':0.2, 'beta':0.1}), (3,4,{'alpha':0.2, 'beta':0.1})])
+        self.assertTrue(nx.is_isomorphic(G_balanced, G_test, edge_match=helpers.edge_match))    
+
+    def testComputeOptimalScheduleBalancedClique(self):
+        alpha = 1
+        beta = 1
+        n = 4
+        data = 1
+        sched_expected = [2,2]
+        G = helpers.complete_multigraph(n,1,[alpha, beta]) # alpha = 1 and beta = 1 for simplicity
+        sched = computeOptimalScheduleBalancedClique(G, alpha, beta, data)
+        self.assertEquals(sched, sched_expected)
 
 if __name__ == '__main__':
     unittest.main()

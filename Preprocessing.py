@@ -1,5 +1,4 @@
 import networkx as nx
-import pprint 
 import matplotlib.pyplot as plt
 
 """
@@ -24,7 +23,6 @@ def cliqueBuilder(G):
                 continue
             # findAllPaths returns a list of paths, a path is a list of edges coupled with a dict that contains two values (alpha -> float, beta -> float)
             paths = findAllPaths(G,u,v, [], [], [], 0, float('inf'))
-            print(f"Paths found between {u} and {v}: \n {paths} \n ------------------------------------")
             vedge_to_path[nodes] = list()
             k = 0
             for path in paths:
@@ -32,9 +30,7 @@ def cliqueBuilder(G):
                 G_clique.add_edge(u,v)
                 G_clique.edges[u,v,k].update(path[1])
                 k += 1
-    pprint.pprint(nx.get_edge_attributes(G_clique, 'beta'))
-    #pprint.pprint(vedge_to_path)
-    return G_clique
+    return G_clique, vedge_to_path
 """
 Input:
 - Topology G
@@ -48,7 +44,6 @@ def findAllPaths(G, u, v, connectionPaths = list(), connectionPath = list(), con
     connectionPathNodes.append(u)
     for edge in G.edges(u, data = True):
         (u,x,d) = edge
-        #print(f"({u},{x})")
         if x == v:
             connectionPath.append(edge)
             alpha += d['alpha']
@@ -56,7 +51,6 @@ def findAllPaths(G, u, v, connectionPaths = list(), connectionPath = list(), con
             beta = min(beta, d['beta'])
             temp = list(connectionPath)
             connectionPaths.append((temp,{'alpha':round(alpha,1), 'beta':beta}))
-            #print(f"Path found: {temp} with attributes {{'alpha': {alpha}, 'beta': {beta}}}")
             connectionPath.pop()
             alpha -= d['alpha']
             beta = prev_beta
@@ -84,18 +78,11 @@ Main function for test purposes
 """
 
 if __name__ == '__main__':
+    """
     G = nx.MultiGraph()  # Corrected capitalization of Graph
     G.add_edges_from([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.5, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})])        
     nx.set_node_attributes(G, {1:COMPUTE_NODE, 2:COMPUTE_NODE, 3:SWITCH, 4:COMPUTE_NODE}, "node_type")
-    print("Paths between 2 and 1")
-    #pprint.pprint(findAllPaths(G, 2, 1))
-    print("Paths between 4 and 2")
-    pprint.pprint(findAllPaths(G, 4, 2, [], [], [], 0, float('inf')))
-    print("Paths between 4 and 1")
-    pprint.pprint(findAllPaths(G, 4, 1, [], [], [], 0, float('inf')))
-    print("------------------------------------------------------")
     cliqueBuilder(G)
-    """
     G_clique = cliqueBuilder(G)
     nx.draw(G_clique)
     plt.show()
