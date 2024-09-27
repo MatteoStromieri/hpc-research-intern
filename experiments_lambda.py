@@ -16,20 +16,9 @@ def generateMultiGraph(n, p):
                 G.add_edge(i, j,  weight_gbps=np.random.randint(min_bandwidth, max_bandwidth), weight_latency=np.random.randint(min_latency, max_latency))       
     
     return G
-"""
-- Given a multigraph G, we compute a path cover
-- A path cover (paths) is a list of lists, every inner list contains some vertexes that represent a path in G 
-- our algorithm is a modified version of the Dijastra one
-"""
-def findPathCover(G):
-    paths =[]
-    threshold = computeBalancedThreshold(G)
-    sorted_nodes = sorted(G.nodes(data=True), key=lambda x: x[1]['weight_size'])
-    for node, data in sorted_nodes:
 
-    return paths
-
-def computeBalancedThreshold(G)
+def computeBalancedThreshold(G):
+    pass
 """
 def visualizeGraph(g):
     # Properties across the whole graph

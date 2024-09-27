@@ -48,5 +48,8 @@ class TestPreprocessing(unittest.TestCase):
         sched = computeOptimalScheduleBalancedClique(G, alpha, beta, data)
         self.assertEquals(sched, sched_expected)
 
+    def testComputeRings(self):
+        pass
+
 if __name__ == '__main__':
     unittest.main()
