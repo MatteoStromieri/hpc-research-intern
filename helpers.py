@@ -1,34 +1,7 @@
 import networkx as nx
 from itertools import combinations
 
-test_edges = {
-    frozenset({1, 2}): [(
-        [(2, 1, {'alpha': 0.1, 'beta': 0.1})],
-        {'alpha': 0.1, 'beta': 0.1}
-    )],
-    frozenset({1, 4}): [(
-        [(4, 3, {'alpha': 0.1, 'beta': 0.1}),
-         (3, 2, {'alpha': 0.5, 'beta': 0.1}),
-         (2, 1, {'alpha': 0.1, 'beta': 0.1})],
-        {'alpha': 0.7, 'beta': 0.1}
-    ),
-    (
-        [(4, 3, {'alpha': 0.1, 'beta': 0.1}),
-         (3, 2, {'alpha': 0.1, 'beta': 0.1}),
-         (2, 1, {'alpha': 0.1, 'beta': 0.1})],
-        {'alpha': 0.3, 'beta': 0.1}
-    )],
-    frozenset({2, 4}): [(
-        [(4, 3, {'alpha': 0.1, 'beta': 0.1}),
-         (3, 2, {'alpha': 0.5, 'beta': 0.1})],
-        {'alpha': 0.6, 'beta': 0.1}
-    ),
-    (
-        [(4, 3, {'alpha': 0.1, 'beta': 0.1}),
-         (3, 2, {'alpha': 0.1, 'beta': 0.1})],
-        {'alpha': 0.2, 'beta': 0.1}
-    )]
-}
+test_edges = {frozenset({1, 2}): {0: ([(2, 1, {'alpha': 0.1, 'beta': 0.1})], {'alpha': 0.1, 'beta': 0.1})}, frozenset({1, 4}): {0: ([(4, 3, {'alpha': 0.1, 'beta': 0.1}), (3, 2, {'alpha': 0.5, 'beta': 0.1}), (2, 1, {'alpha': 0.1, 'beta': 0.1})], {'alpha': 0.7, 'beta': 0.1}), 1: ([(4, 3, {'alpha': 0.1, 'beta': 0.1}), (3, 2, {'alpha': 0.1, 'beta': 0.1}), (2, 1, {'alpha': 0.1, 'beta': 0.1})], {'alpha': 0.3, 'beta': 0.1})}, frozenset({2, 4}): {0: ([(4, 3, {'alpha': 0.1, 'beta': 0.1}), (3, 2, {'alpha': 0.5, 'beta': 0.1})], {'alpha': 0.6, 'beta': 0.1}), 1: ([(4, 3, {'alpha': 0.1, 'beta': 0.1}), (3, 2, {'alpha': 0.1, 'beta': 0.1})], {'alpha': 0.2, 'beta': 0.1})}}
 
 def node_match(n1, n2):
     return n1['name'] == n2['name']

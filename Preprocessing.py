@@ -14,23 +14,23 @@ def cliqueBuilder(G):
     G_clique = nx.MultiGraph()
     G_clique.add_nodes_from(compute_nodes)
     # dictionary: virtual edge -> path
-    vedge_to_path = dict()
+    vedge_to_paths = dict()
     # find all paths for each couple of nodes
     for u in compute_nodes:
         for v in compute_nodes:
             nodes = frozenset([u,v])
-            if u <= v or nodes in vedge_to_path.keys():
+            if u <= v or nodes in vedge_to_paths.keys():
                 continue
             # findAllPaths returns a list of paths, a path is a list of edges coupled with a dict that contains two values (alpha -> float, beta -> float)
             paths = findAllPaths(G,u,v, [], [], [], 0, float('inf'))
-            vedge_to_path[nodes] = list()
+            vedge_to_paths[nodes] = dict()
             k = 0
             for path in paths:
-                vedge_to_path[nodes].append(path)
+                vedge_to_paths[nodes][k] = path
                 G_clique.add_edge(u,v)
                 G_clique.edges[u,v,k].update(path[1])
                 k += 1
-    return G_clique, vedge_to_path
+    return G_clique, vedge_to_paths
 """
 Input:
 - Topology G

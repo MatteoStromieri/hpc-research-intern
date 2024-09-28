@@ -1,6 +1,8 @@
 import Preprocessing, Threshold, helpers
 import DoubleEndedQueue as DEQ
+from MaxHeap import MaxHeap
 
+MAX_SIZE = 2000
 PATH = 0
 EXEC_TIME = 1
 SS,SH,HS,HH = (0,1,2,3)
@@ -17,7 +19,7 @@ def computeRings(h, threshold, K, G, d):
     pd = dict() # key = virtual-path | value = data sizes
     rings = [] # this list will contain the "optimal" rings, it is the output 
     for v in K.nodes:
-        q.insert(Path(v))
+        q.insert(Path(v, d[v]))
     while not q.isEmpty():
         while q.readMax() >= threshold:
             p = q.popMax()
@@ -32,7 +34,7 @@ def computeRings(h, threshold, K, G, d):
                 if ringCost(h, K, G, d, p, e) < min_cost:
                     e_opt = e
             updateBandwidth(K,G,pd,e_opt,p)
-            q.updatePriorities(K,G,d,d_max)
+            updatePriorities(q,K,G,d,d_max)
             p.closePath(e_opt)
             rings.append(p)
         p = q.getMin()
@@ -69,22 +71,73 @@ def computeRings(h, threshold, K, G, d):
                 q.add(p)
                 q.updatePriorities(K,G,d,d_max)
         return rings
+    
 
 
+def updatePriorities(q,K,G,d,d_max):
+    pass
 
-                
-    pass 
-
+def computePriority():
+"""
+Execution time of the ring that we get if we close p with e
+"""
+def ringCost(h, K, G, d, p, e):
+    pass
+"""
+Execution time of the path that we get if we merge p and w via edge e
+"""
+def cost(h, K, G, d, p, e, w):
+    pass
 
 class Path:
-    def __init__(self, source):
+    def __init__(self, source, data):
         self.path = [] # list of (u,v,key) tuples
+        self.real_edges = dict() # real edge -> times this path is passed throught this real edge
+        self.most_trafficked_edge = 0 # the highest amount of data that passes throught the same physiscal edge
+        self.most_trafficked_edge_data = list()
+        self.in_path_data = MaxHeap(MAX_SIZE)
+        self.in_path_data.insert(data)
         self.source = source
         self.head = source
         self.priority = 0
     
     # add an edge (u,v) to the path
     def mergePaths(self, path, key, marker):
-        pass   
-    def closePath(self, key):
-        pass 
+        # 1st: update the list of edges
+        if marker == SS:
+            path.path.insert(0,(self.source, path.source, key))
+            for edge in path.path:
+                self.path.insert(0,(edge[1], edge[0], edge[2]))
+            self.source = edge[1]
+        elif marker == SH:
+            self.path.insert(0,(path.head, self.source, key))
+            self.path = path.path + self.path
+            self.source = path.source
+        elif marker == HS:
+            self.path.append(0,(self.head, path.source, key))
+            self.path = self.path + path.path
+            self.head = path.head
+        elif marker == HH:
+            self.path.append(self.head, path.head, key)
+            for edge in reversed(path.path):
+                self.path.append((edge[1], edge[0], edge[2]))
+            self.head = path.source
+        # 2nd: update other data structures
+        # merge dictionary of real_edges
+        helpers.mergeDictionaries(self.real_edges, path.real_edges)
+
+    
+    
+            
+           
+    
+    def closePath(self, h, key):
+        self.path.append((self.head, self.source, key))
+        self.head = self.source
+        r_edges = h[frozenset([self.head, self.source])][key]
+        for r_e in r_edges:
+            self.real_edges[r_e] += 1
+            if self.real_edges[r_e] > self.most_trafficked_edge:
+                self.most_trafficked_edge += 1
+                self.most_trafficked_edge_data.append(self.in_path_data.extractMax())
+    

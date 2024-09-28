@@ -1,44 +1,53 @@
 import heapq
 
+"""
+This class is a DOubleEndedQueue for items (Objects) that implement a getPriority method
+"""
+
 class DoubleEndedQueue:
-    def __init__(self, get_priority):
+    def __init__(self):
         self.sorted_list = []
-        self.get_priority = get_priority
         self.len = 0
 
     def insert(self,item):
         self.sorted_list.append(item)
-        self.sorted_list.sort(key = self.get_priority)
+        self.sorted_list.sort(key = item.getPriority())
         len += 1
     
-    def read_max(self):
+    def readMax(self):
         try:
             return self.sorted_list[len-1]
         except:
             print("something went wrong")
 
-    def read_min(self):
+    def readMin(self):
         try:
             return self.sorted_list[0]
         except:
             print("something went wrong")
 
-    def pop_max(self):
+    def popMax(self):
         try:
             max = self.sorted_list.pop()
             return max
         except:
             print("something went wrong")
 
-    def get_min(self):
+    def getMin(self):
         try:
             min = self.sorted_list.pop(0)
             return min
         except:
             print("something went wrong")
 
-    def is_empty(self):
+    def isEmpty(self):
         if self.len == 0:
             return True
         else:
             return False
+    
+    def remove(self, item):
+        self.sorted_list.remove(item)
+
+    def reset(self):
+        self.sorted_list.sort()

@@ -28,6 +28,7 @@ class TestPreprocessing(unittest.TestCase):
         G.add_edges_from([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.5, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})])        
         nx.set_node_attributes(G, {1:COMPUTE_NODE, 2:COMPUTE_NODE, 3:SWITCH, 4:COMPUTE_NODE}, "node_type")
         _, edges = cliqueBuilder(G)
+        print(edges)
         self.assertDictEqual(edges, helpers.test_edges)
 
     def testComputeBalancedGraph(self):
