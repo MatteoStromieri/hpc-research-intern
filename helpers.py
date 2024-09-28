@@ -22,3 +22,16 @@ def complete_multigraph(n, num_edges_between_each_pair, weights):
             G.add_edge(u, v, alpha = weights[0], beta = weights[1])
     
     return G
+
+"""
+Every input dictionary has an edge as key and an int as value, we want to sum the values related to the same key
+"""
+def mergeDictionaries(dict1, dict2, val):
+    for key in dict2.keys():
+        dict1[key] = dict1.setdefault(key,0) + dict2[key]
+        if val < dict1[key]:
+            val = dict1[key]
+    return val
+
+def simplifiedHash(r_edge):
+    return hash((frozenset(r_edge[0],r_edge[1]),r_edge[2]))

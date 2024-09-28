@@ -42,8 +42,8 @@ Each path pi is given by a couple ([e1,e2,...],(alpha -> float, beta -> float))
 """
 def findAllPaths(G, u, v, connectionPaths = list(), connectionPath = list(), connectionPathNodes = list(), alpha = 0, beta = float('inf')):
     connectionPathNodes.append(u)
-    for edge in G.edges(u, data = True):
-        (u,x,d) = edge
+    for edge in G.edges(u, data = True, keys = True):
+        (u,x,k,d) = edge
         if x == v:
             connectionPath.append(edge)
             alpha += d['alpha']
