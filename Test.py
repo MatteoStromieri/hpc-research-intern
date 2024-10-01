@@ -18,10 +18,9 @@ class TestPreprocessing(unittest.TestCase):
     def testGetFindAllPaths(self):
         G = nx.MultiGraph()  # Corrected capitalization of Graph
         G.add_edges_from([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})])
-        self.assertEqual(findAllPaths(G,1,4), [
-            ([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})], {'alpha':0.3,'beta':0.1}),
-            ([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})], {'alpha':0.3,'beta':0.1})
-            ])
+        found_paths = findAllPaths(G,1,4)
+        print(found_paths)
+        self.assertEqual(found_paths, [([(1, 2, 0, {'alpha': 0.1, 'beta': 0.1}), (2, 3, 0, {'alpha': 0.1, 'beta': 0.1}), (3, 4, 0, {'alpha': 0.1, 'beta': 0.1})], {'alpha': 0.3, 'beta': 0.1}), ([(1, 2, 0, {'alpha': 0.1, 'beta': 0.1}), (2, 3, 0, {'alpha': 0.1, 'beta': 0.1}), (3, 4, 1, {'alpha': 0.1, 'beta': 0.1})], {'alpha': 0.3, 'beta': 0.1})])
 
     def testCliqueBuilder(self):
         G = nx.MultiGraph()  # Corrected capitalization of Graph

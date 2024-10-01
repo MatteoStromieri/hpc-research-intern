@@ -73,17 +73,3 @@ def findAllPaths(G, u, v, connectionPaths = list(), connectionPath = list(), con
 def getComputeNodes(G):
     return [n for n, attrs in G.nodes(data=True) if attrs.get('node_type') == COMPUTE_NODE]
 
-"""
-Main function for test purposes
-"""
-
-if __name__ == '__main__':
-    """
-    G = nx.MultiGraph()  # Corrected capitalization of Graph
-    G.add_edges_from([(1,2,{'alpha':0.1, 'beta':0.1}),(2,3,{'alpha':0.5, 'beta':0.1}),(2,3,{'alpha':0.1, 'beta':0.1}),(3,4,{'alpha':0.1, 'beta':0.1})])        
-    nx.set_node_attributes(G, {1:COMPUTE_NODE, 2:COMPUTE_NODE, 3:SWITCH, 4:COMPUTE_NODE}, "node_type")
-    cliqueBuilder(G)
-    G_clique = cliqueBuilder(G)
-    nx.draw(G_clique)
-    plt.show()
-    """

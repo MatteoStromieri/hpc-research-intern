@@ -1,14 +1,28 @@
 import sys
+import copy
+import json
+
+MAX_SIZE = 2000
+
  
 class MaxHeap:
  
-    def __init__(self, maxsize):
-         
+    def __init__(self, maxsize):        
         self.maxsize = maxsize
         self.size = 0
         self.Heap = [0] * (self.maxsize + 1)
         self.Heap[0] = sys.maxsize
         self.FRONT = 1
+    
+    def duplicate(self):
+        self_new = MaxHeap(MAX_SIZE)
+        self_new.size = self.size
+        self_new.Heap = copy.copy(self.Heap)
+        self_new.FRONT = self.FRONT
+        return self_new
+    
+    def toJSON(self):
+        return json.dumps(self)
  
     # Function to return the position of
     # parent for the node currently
@@ -66,6 +80,11 @@ class MaxHeap:
                 else:
                     self.swap(pos, self.rightChild(pos))
                     self.maxHeapify(self.rightChild(pos))
+
+    # Function to heapify the node at pos
+    def generalMaxHeapify(self):
+        for pos in range(1,self.size + 1):
+            self.maxHeapify(pos)
  
     # Function to insert a node into the heap
     def insert(self, element):
@@ -82,6 +101,16 @@ class MaxHeap:
                self.Heap[self.parent(current)]):
             self.swap(current, self.parent(current))
             current = self.parent(current)
+    
+    def merge(self, heap):
+         
+        if self.size >= self.maxsize:
+            print("Heap is running out of space! Check line 74 in heap code")
+            return
+        self.Heap[self.size + 1 : self.size + heap.size + 1] = heap.Heap[1:heap.size+1]
+        self.size = self.size + heap.size 
+
+        self.generalMaxHeapify() 
  
     # Function to print the contents of the heap
     def Print(self):
